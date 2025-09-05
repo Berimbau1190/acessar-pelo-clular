@@ -2,8 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <title>Cartão QR Clicável Mobile</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Card Hover 3D com QR Clicável</title>
   <style>
     * {
       box-sizing: border-box;
@@ -15,128 +14,272 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      height: 100vh;
       background: #6bb4e6;
       font-family: Arial, sans-serif;
-      padding: 20px;
     }
 
     .container-cards {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 16px;
-      width: 100%;
-      max-width: 320px;
+      position: relative;
+      perspective: 1500px;
+    }
+
+    .container-cards:hover .card::before {
+      opacity: 0;
+      animation-play-state: paused;
+    }
+
+    .a {
+      position: absolute;
+      width: 115px;
+      height: 130px;
+      z-index: 19;
+    }
+
+    .tl { top: -10px; left: -30px; }
+    .t  { top: -10px; left: 85px; }
+    .tr { top: -10px; left: 200px; }
+    .l  { top: 120px; left: -30px; }
+    .c  { top: 120px; left: 85px; }
+    .r  { top: 120px; left: 200px; }
+    .bl { top: 250px; left: -30px; }
+    .b  { top: 250px; left: 85px; }
+    .br { top: 250px; left: 200px; }
+
+    .tl:hover ~ .card { transform: rotateX(-20deg) rotateY(20deg); }
+    .t:hover  ~ .card { transform: rotateX(-20deg); }
+    .tr:hover ~ .card { transform: rotateX(-20deg) rotateY(-20deg); }
+    .l:hover  ~ .card { transform: rotateY(20deg); }
+    .c:hover  ~ .card { transform: scale(1.05); }
+    .r:hover  ~ .card { transform: rotateY(-20deg); }
+    .bl:hover ~ .card { transform: rotateX(20deg) rotateY(20deg); }
+    .b:hover  ~ .card { transform: rotateX(20deg); }
+    .br:hover ~ .card { transform: rotateX(20deg) rotateY(-20deg); }
+
+    .tl:hover ~ .card .light-shadow,
+    .tr:hover ~ .card .light-shadow {
+      box-shadow: inset 32px 32px 120px 5px rgba(255, 255, 255, 0.5),
+                  inset -32px -32px 120px 5px rgb(255, 253, 253);
+    }
+
+    .t:hover ~ .card .light-shadow {
+      box-shadow: inset 0 32px 120px rgba(255, 255, 255, 0.5),
+                  inset 0 -32px 120px rgb(255, 255, 255);
+    }
+
+    .l:hover ~ .card .light-shadow {
+      box-shadow: inset 32px 0 120px rgba(255, 255, 255, 0.5),
+                  inset -32px 0 120px rgba(0, 0, 0, 0.25);
+    }
+
+    .c:hover ~ .card .light-shadow {
+      box-shadow: inset 0 0 120px rgba(255, 255, 255, 0.5),
+                  inset 0 0 120px rgba(0, 0, 0, 0.25);
+    }
+
+    .r:hover ~ .card .light-shadow {
+      box-shadow: inset -32px 0 120px rgb(255, 251, 0),
+                  inset 32px 0 120px rgb(9, 245, 60);
+    }
+
+    .bl:hover ~ .card .light-shadow,
+    .b:hover ~ .card .light-shadow,
+    .br:hover ~ .card .light-shadow {
+      box-shadow: inset 0 0 120px 5px rgb(25, 110, 221);
     }
 
     .card {
       position: relative;
-      width: 100%;
-      background-color: #f0f0f0;
-      border-radius: 16px;
-      padding: 16px;
-      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+      height: 380px;
+      width: 280px;
       display: flex;
       flex-direction: column;
+      justify-content: start;
       align-items: center;
-      transition: transform 0.3s ease;
+      padding: 1rem;
+      color: #fffdfd;
+      background-color: #e2dbdb;
+      box-shadow: 0 12px 12px rgb(255, 255, 255);
+      border-radius: 1rem;
+      transform: scale(0.9);
+      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.25);
+      overflow: hidden;
+      z-index: 10;
+      cursor: default;
     }
 
-    .card:active {
-      transform: scale(1.02);
+    .card:hover {
+      transform: scale(1);
     }
+
+    .card::before,
+    .card::after {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      transition: all 0.5s ease;
+    }
+
+    .card::before {
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100px;
+      height: 400px;
+      background-color: #522020;
+      filter: blur(50px);
+      animation: animation-card-shadow 10s linear infinite;
+    }
+
+    .card::after {
+      inset: 1.5px;
+      background-image: url("./imagem/programacao.jpg"); /* Caminho relativo para a imagem */
+      background-position: center;
+      background-size: cover;
+      border-radius: 1rem;
+    }
+
+    .light-shadow {
+      position: absolute;
+      inset: 0;
+      transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+    }
+
+    /* QR e botão acessível */
 
     .qr-link {
-      width: 140px;
-      height: 140px;
-      border-radius: 12px;
+      position: relative;
+      display: inline-block;
+      width: 120px;
+      height: 120px;
+      border-radius: 8px;
       overflow: hidden;
-      margin: 12px 0;
-      display: block;
+      cursor: pointer;
+      margin-top: 10px;
+      z-index: 15;
     }
 
     .qr-link img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 12px;
       display: block;
+      border-radius: 8px;
+      transition: transform 0.3s ease;
+    }
+
+    .qr-link:hover img {
+      transform: scale(1.05);
+    }
+
+    /* Botão que aparece fora do cartão ao passar o mouse no cartão */
+    .botao-hover {
+      position: absolute;
+      bottom: -50px; /* Aparece abaixo do cartão */
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 24px;
+      background-color: #2541b2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      text-decoration: none;
+      text-align: center;
+      z-index: 20;
+    }
+
+    .container-cards:hover .botao-hover {
+      opacity: 1;
+      pointer-events: auto;
     }
 
     .role-user {
-      font-size: 18px;
-      font-weight: bold;
-      margin-top: 8px;
+      display: flex;
+      align-items: center;
+      padding: 0.5rem;
+      font-size: 20px;
+      font-weight: 600;
+      gap: 0.25rem;
+      margin-top: 10px;
+      z-index: 10;
+      position: relative;
     }
 
     .info-user {
+      display: flex;
+      flex-direction: column;
+      padding: 0.5rem;
       text-align: center;
-      margin-top: 4px;
+      z-index: 10;
+      position: relative;
     }
 
-    .alias {
-      font-size: 14px;
-      color: #555;
+    .info-user .alias {
+      font-size: 12px;
     }
 
-    .name h3 {
-      margin-top: 4px;
-      font-size: 20px;
-      color: #222;
+    .info-user .name {
+      font-size: 18px;
     }
 
     .separator-line {
       width: 100%;
-      border-top: 1px dashed #999;
-      margin: 12px 0;
+      border-top: 2px dashed #ffffff;
+      margin: 0.5rem 0;
+      position: relative;
+      z-index: 10;
     }
 
     .flex {
       display: flex;
+      width: 100%;
       justify-content: space-between;
-      width: 100%;
+      position: relative;
+      z-index: 10;
     }
 
-    .flex-col h2,
-    .flex-col h1 {
-      font-size: 16px;
-      text-align: left;
-      color: #333;
+    .flex-col {
+      display: flex;
+      flex-direction: column;
+      font-size: 8px;
+      position: relative;
+      z-index: 10;
     }
 
-    /* BOTÃO externo que aparece sempre (melhor em mobile) */
-    .botao-externo {
-      padding: 12px 24px;
-      background-color: #007bff;
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      border-radius: 8px;
-      text-align: center;
-      display: inline-block;
-      width: 100%;
-      max-width: 320px;
-      transition: background 0.3s ease;
+    .info-position {
+      padding: 0.25rem 0;
     }
 
-    .botao-externo:hover {
-      background-color: #0056b3;
+    @keyframes animation-card-shadow {
+      to {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
     }
   </style>
 </head>
 <body>
   <div class="container-cards">
-    <!-- Cartão -->
+    <div class="a tl"></div>
+    <div class="a t"></div>
+    <div class="a tr"></div>
+    <div class="a l"></div>
+    <div class="a c"></div>
+    <div class="a r"></div>
+    <div class="a bl"></div>
+    <div class="a b"></div>
+    <div class="a br"></div>
+
     <div class="card">
-      <!-- QR Code -->
-      <a href="https://api.whatsapp.com/qr/Z5RJE7Q3ZLUKD1?autoload=1&app_absent=0"
-         target="_blank"
-         rel="noopener noreferrer"
-         class="qr-link"
-         aria-label="Acessar WhatsApp">
-        <img src="https://api.qrcodecreator.com/storage/qr-codes/3449318-1757012118.svg"
-             alt="QR Code WhatsApp" />
+      <div class="light-shadow"></div>
+
+      <a href="https://api.whatsapp.com/qr/Z5RJE7Q3ZLUKD1?autoload=1&app_absent=0" target="_blank" rel="noopener noreferrer" class="qr-link" aria-label="Acessar WhatsApp">
+        <img src="https://api.qrcodecreator.com/storage/qr-codes/3449318-1757012118.svg" alt="QR Code WhatsApp" />
       </a>
 
       <div class="role-user">👤 Desenvolvedor</div>
@@ -150,23 +293,17 @@
 
       <div class="flex">
         <div class="flex-col">
-          <h2>Evento</h2>
-          <h2>Web Conference 2025</h2>
+          <div class="info-position"><h2>Evento</h2></div>
+          <div class="info-position"><h2>Web Conference 2025</h2></div>
         </div>
         <div class="flex-col" style="text-align: right;">
-          <h2>DATA</h2>
-          <h1>04/09/2025</h1>
+          <div class="info-position"><h2>DATA</h2></div>
+          <div class="info-position"><h1>04/09/2025</h1></div>
         </div>
       </div>
     </div>
 
-    <!-- Botão sempre visível abaixo do cartão -->
-    <a href="http://www.youtube.com" 
-       target="_blank" 
-       rel="noopener noreferrer" 
-       class="botao-externo">
-      Acessar
-    </a>
+    <a href="http://www.youtube.com" target="_blank" rel="noopener noreferrer" class="botao-hover">Acessar</a>
   </div>
 </body>
 </html>
